@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="mixbox.js"></script>
+    <title>MixBox Test</title>
+  </head>
+  <body>
+    <div id="upper">
+      <input id="upper-val" type="text" value="#000000"/>
+    </div>
+    <div id="mixed">
+      <span id="mixed-val">#808080</span>
+      <br/>
+      <span>Ratio (upper/lower):</span> <input id="ratio" type="number" min="0" max="1" step="0.05" value="0.5"/>
+      <button onclick="mixColors()">Mix!</button>
+    </div>
+    <div id="lower">
+      <input id="lower-val" type="text" value="#ffffff"/>
+    </div>
+  </body>
+
+  <style>
+    span {
+      background-color: #fff;
+      color: #000;
+    }
+
+    div {
+      min-height: 25vh;
+      border: 1px dashed #808080;
+    }
+
+    #upper {
+      background-color: #000000;
+    }
+
+    #mixed {
+      background-color: #808080;
+    }
+
+    #lower {
+      background-color: #ffffff;
+    }
+  </style>
+
+  <script>
+    var upper = document.querySelector("#upper");
+    var mixed = document.querySelector("#mixed");
+    var lower = document.querySelector("#lower");
+    var upperVal = document.querySelector("#upper-val");
+    var lowerVal = document.querySelector("#lower-val");
+    var mixedVal = document.querySelector("#mixed-val");
+
+    upperVal.value = "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);
+    lowerVal.value = "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);
+    mixColors();
+
+    function mixColors() {
+      // Mix colors for result.
+      var ratio = document.querySelector("#ratio").value;
+
+      upper.style.backgroundColor = upperVal.value;
+      lower.style.backgroundColor = lowerVal.value;
+
+      var result = mixbox.lerp(upperVal.value, lowerVal.value, 1 - ratio);
+
+      mixed.style.backgroundColor = result.toString();
+      mixedVal.textContent = "#" +
+        result[0].toString(16) +
+        result[1].toString(16) +
+        result[2].toString(16);
+    }
+  </script>
+
+</html>
