@@ -27,7 +27,7 @@
 
     div {
       min-height: 25vh;
-      border: 1px dashed #808080;
+      border: 1px dashed #000;
     }
 
     #upper {
@@ -43,7 +43,7 @@
     }
   </style>
 
-  <script>
+  <script defer>
     var upper = document.querySelector("#upper");
     var mixed = document.querySelector("#mixed");
     var lower = document.querySelector("#lower");
@@ -51,8 +51,8 @@
     var lowerVal = document.querySelector("#lower-val");
     var mixedVal = document.querySelector("#mixed-val");
 
-    upperVal.value = "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);
-    lowerVal.value = "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);
+    upperVal.value = "#" + ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
+    lowerVal.value = "#" + ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
     mixColors();
 
     function mixColors() {
@@ -66,9 +66,9 @@
 
       mixed.style.backgroundColor = result.toString();
       mixedVal.textContent = "#" +
-        result[0].toString(16) +
-        result[1].toString(16) +
-        result[2].toString(16);
+        ('0' + result[0].toString(16)).slice(-2) +
+        ('0' + result[1].toString(16)).slice(-2) +
+        ('0' + result[2].toString(16)).slice(-2);
     }
   </script>
 
