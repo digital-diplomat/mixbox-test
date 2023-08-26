@@ -8,16 +8,17 @@
   </head>
   <body>
     <h1>Mixbox.js Test Page</h1>
-    <span>Ratio (upper/lower):</span> <input id="ratio" type="number" min="0" max="1" step="0.05" value="0.5"/><br/>
-    <button onclick="mixColors()">Mix!</button> <span>or</span> <button onclick="randomColors()">Random Palette</button>
+    <span>Ratio (upper/lower):</span><span id="percent">50/50</span><br/>
+    <input id="ratio" type="range" min="0" max="100" step="1" value="50" oninput="updateRatio(); mixColors()"/><br/>
+    <button onclick="randomColors()">Random Palette</button>
     <div id="upper">
-      <input id="upper-val" type="text" value="#000000"/>
+      <span>#</span><input id="upper-val" type="text" value="000000" onkeyup="mixColors()"/>
     </div>
     <div id="mixed">
       <span id="mixed-val">#808080</span>
     </div>
     <div id="lower">
-      <input id="lower-val" type="text" value="#ffffff"/>
+      <span>#</span><input id="lower-val" type="text" value="ffffff" onkeyup="mixColors()"/>
     </div>
   </body>
 
@@ -27,6 +28,7 @@
       color: #000;
       font-family: monospace;
       padding: 4px;
+      border: none;
     }
 
     button {
@@ -63,21 +65,18 @@
     var upperVal = document.querySelector("#upper-val");
     var lowerVal = document.querySelector("#lower-val");
     var mixedVal = document.querySelector("#mixed-val");
+    var percent = document.querySelector("#percent");
+
+    function updateRatio() {
+      var ratio = Number.parseInt(document.querySelector("#ratio").value);
+      percent.textContent = (100 - ratio) + "/" + ratio;
+    }
 
     randomColors();
 
-    upperVal.onchange = function () {
-      upper.style.backgroundColor = upperVal.value;
-    }
-
-    lowerVal.onchange = function () {
-      lower.style.backgroundColor = lowerVal.value;
-    }
-
-
     function randomColors() {
-      upperVal.value = "#" + ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
-      lowerVal.value = "#" + ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
+      upperVal.value = ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
+      lowerVal.value = ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
       mixColors();
     }
 
@@ -85,16 +84,27 @@
       // Mix colors for result.
       var ratio = document.querySelector("#ratio").value;
 
-      upper.style.backgroundColor = upperVal.value;
-      lower.style.backgroundColor = lowerVal.value;
+      upper.style.backgroundColor = "#" + upperVal.value;
+      lower.style.backgroundColor = "#" + lowerVal.value;
 
-      var result = mixbox.lerp(upperVal.value, lowerVal.value, 1 - ratio);
+      var result = mixbox.lerp("#" + upperVal.value, "#" + lowerVal.value, ratio/100);
 
-      mixed.style.backgroundColor = result.toString();
-      mixedVal.textContent = "#" +
+      try {
+        mixed.style.backgroundColor = result.toString();
+      } catch (TypeError) {
+        return;
+      }
+      var resultHex = "#" +
         ('0' + result[0].toString(16)).slice(-2) +
         ('0' + result[1].toString(16)).slice(-2) +
         ('0' + result[2].toString(16)).slice(-2);
+
+      if (result.length === 4) {
+        resultHex += ('0' + result[3].toString(16)).slice(-2);
+      }
+
+      mixedVal.textContent = resultHex;
+      console.log(upperVal.value + " × " + lowerVal.value + " → " + resultHex);
     }
   </script>
 
