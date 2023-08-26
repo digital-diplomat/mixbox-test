@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body>
+    <h1>Mixbox.js Test Page</h1>
+    <span>Ratio (upper/lower):</span> <input id="ratio" type="number" min="0" max="1" step="0.05" value="0.5"/><br/>
+    <button onclick="mixColors()">Mix!</button> <span>or</span> <button onclick="randomColors()">Random Palette</button>
     <div id="upper">
       <input id="upper-val" type="text" value="#000000"/>
     </div>
     <div id="mixed">
       <span id="mixed-val">#808080</span>
-      <br/>
-      <span>Ratio (upper/lower):</span> <input id="ratio" type="number" min="0" max="1" step="0.05" value="0.5"/>
-      <button onclick="mixColors()">Mix!</button>
     </div>
     <div id="lower">
       <input id="lower-val" type="text" value="#ffffff"/>
@@ -22,14 +22,25 @@
   </body>
 
   <style>
-    span {
+    span, input, h1 {
       background-color: #fff;
       color: #000;
+      font-family: monospace;
+      padding: 4px;
+    }
+
+    button {
+      font-family: monospace;
     }
 
     div {
       min-height: 25vh;
       border: 1px dashed #000;
+      padding: 4px;
+    }
+
+    button {
+      margin-bottom: 8px;
     }
 
     #upper {
@@ -53,9 +64,22 @@
     var lowerVal = document.querySelector("#lower-val");
     var mixedVal = document.querySelector("#mixed-val");
 
-    upperVal.value = "#" + ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
-    lowerVal.value = "#" + ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
-    mixColors();
+    randomColors();
+
+    upperVal.onchange = function () {
+      upper.style.backgroundColor = upperVal.value;
+    }
+
+    lowerVal.onchange = function () {
+      lower.style.backgroundColor = lowerVal.value;
+    }
+
+
+    function randomColors() {
+      upperVal.value = "#" + ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
+      lowerVal.value = "#" + ('000000' + Math.floor(Math.random() * 0xFFFFFF).toString(16)).slice(-6);
+      mixColors();
+    }
 
     function mixColors() {
       // Mix colors for result.
